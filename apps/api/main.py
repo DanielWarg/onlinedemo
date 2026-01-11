@@ -4663,7 +4663,6 @@ async def upload_recording_job(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
-    _: bool = Depends(require_admin),
     username: str = Depends(verify_basic_auth),
     __rl: bool = Depends(rate_limit("upload", 20)),
 ):
