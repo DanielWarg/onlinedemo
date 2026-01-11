@@ -140,18 +140,8 @@ function ProjectDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectNotes, location.state?.openNoteId])
 
-  // File picker helper (matches Arbetsytan fix: avoid display:none, keep input mounted,
-  // and trigger showPicker()+click within the same user-gesture tick).
-  const handleDropzoneClick = () => {
-    const input = ingestMode === 'audio' ? audioInputRef.current : fileInputRef.current
-    if (!input) return
-    try {
-      input.showPicker?.()
-    } catch {
-      // ignore
-    }
-    input.click()
-  }
+  // IMPORTANT: Do NOT call input.click()/showPicker(). Chrome will block the file chooser
+  // unless it is triggered by a direct user activation on the <input type="file"> itself.
 
   const handleAudioSelect = async (e) => {
     const file = e.target.files?.[0]
@@ -1048,20 +1038,30 @@ function ProjectDetail() {
                     <Mic size={18} />
                     <span>Spela in</span>
                   </button>
-                  <button
+                  <div
                     className={`audio-action-btn audio-action-secondary ${recordingMode === 'upload' ? 'active' : ''}`}
-                    onClick={() => {
+                    style={{ position: 'relative', opacity: (isRecording || recordingUploading || recordingProcessing) ? 0.5 : 1 }}
+                    onMouseDown={() => {
                       setRecordingMode('upload')
                       setMicPermissionError(null)
-                      // IMPORTANT: Must be in the same user-gesture tick, otherwise browsers may block the picker.
-                      handleDropzoneClick()
                     }}
-                    disabled={isRecording || recordingUploading || recordingProcessing}
-                    type="button"
                   >
+                    <input
+                      ref={audioInputRef}
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleAudioSelect}
+                      disabled={isRecording || recordingUploading || recordingProcessing}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        opacity: 0.01,
+                        cursor: (isRecording || recordingUploading || recordingProcessing) ? 'not-allowed' : 'pointer'
+                      }}
+                    />
                     <Upload size={18} />
                     <span>Ladda upp fil</span>
-                  </button>
+                  </div>
                 </div>
 
                 <div className="audio-recorder-content">
@@ -1215,34 +1215,18 @@ function ProjectDetail() {
             {/* Primary Document Upload - Only when document mode is active - MUST be before Material List */}
             {ingestMode === 'document' && (
               <div className="document-primary-upload">
-                <div
-                  className={`ingest-dropzone ${uploading ? 'uploading' : ''}`}
-                  onClick={() => {
-                    if (uploading) return
-                    handleDropzoneClick()
-                  }}
-                  style={{ cursor: uploading ? 'default' : 'pointer' }}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (uploading) return
-                    if (e.key === 'Enter' || e.key === ' ') handleDropzoneClick()
-                  }}
-                >
+                <div className={`ingest-dropzone ${uploading ? 'uploading' : ''}`} style={{ position: 'relative' }}>
                   <input
                     ref={fileInputRef}
                     type="file"
                     accept=".pdf,.txt"
                     onChange={handleFileSelect}
                     disabled={uploading}
-                    // Some browsers block programmatic click() on display:none inputs.
-                    // Keep it hidden but present in the layout tree (offscreen).
                     style={{
                       position: 'absolute',
-                      left: '-9999px',
-                      width: '1px',
-                      height: '1px',
-                      opacity: 0
+                      inset: 0,
+                      opacity: 0.01,
+                      cursor: uploading ? 'not-allowed' : 'pointer'
                     }}
                   />
                   <div className="dropzone-content">
@@ -1260,25 +1244,6 @@ function ProjectDetail() {
                   </div>
                 </div>
                 <p className="document-upload-help">Ladda upp dokument för automatisk bearbetning och sanering.</p>
-
-                {/* Debug fallback: direct file input (no JS-trigger). Hidden in details to avoid UI clutter. */}
-                <details style={{ marginTop: 'var(--spacing-md)' }}>
-                  <summary style={{ cursor: 'pointer', color: 'var(--color-text-muted)' }}>
-                    Felsök uppladdning (om filväljaren inte öppnar)
-                  </summary>
-                  <div style={{ marginTop: 'var(--spacing-sm)' }}>
-                    <input
-                      type="file"
-                      accept=".pdf,.txt"
-                      onChange={handleFileSelect}
-                      disabled={uploading}
-                    />
-                    <div style={{ marginTop: '6px', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
-                      Detta är en “rå” filväljare utan special-UI. Om denna öppnar dialogen men dropzonen inte gör det,
-                      är problemet i click-triggern.
-                    </div>
-                  </div>
-                </details>
               </div>
             )}
 

@@ -38,16 +38,6 @@ function JournalistNotes({ projectId }) {
   const textareaRef = useRef(null)
   const imageInputRef = useRef(null)
   const imageInputId = 'journalist-note-image-input'
-  const openImagePicker = () => {
-    const input = imageInputRef.current
-    if (!input) return
-    try {
-      input.showPicker?.()
-    } catch {
-      // ignore
-    }
-    input.click()
-  }
   const saveTimeoutRef = useRef(null)
 
   const username = 'admin'
@@ -720,38 +710,23 @@ function JournalistNotes({ projectId }) {
               <AlertTriangle size={14} />
               <span>Osäkert</span>
             </button>
-            <input
-              ref={imageInputRef}
-              type="file"
-              id={imageInputId}
-              accept="image/*"
-              onChange={handleImageSelect}
-              style={{
-                position: 'absolute',
-                left: '-9999px',
-                width: '1px',
-                height: '1px',
-                opacity: 0
-              }}
-            />
-            <button
-              className="btn-prefix"
-              title="Ladda upp bild"
-              style={{ cursor: 'pointer' }}
-              onClick={openImagePicker}
-              type="button"
-            >
+            <label className="btn-prefix" title="Ladda upp bild" style={{ cursor: 'pointer', position: 'relative' }}>
+              <input
+                ref={imageInputRef}
+                type="file"
+                id={imageInputId}
+                accept="image/*"
+                onChange={handleImageSelect}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  opacity: 0.01,
+                  cursor: 'pointer'
+                }}
+              />
               <ImageIcon size={14} />
               <span>Bild</span>
-            </button>
-
-            {/* Debug fallback: direct file input (no JS-trigger) */}
-            <details style={{ marginLeft: '8px' }}>
-              <summary style={{ cursor: 'pointer', color: 'var(--color-text-muted)' }}>Felsök</summary>
-              <div style={{ marginTop: '6px' }}>
-                <input type="file" accept="image/*" onChange={handleImageSelect} />
-              </div>
-            </details>
+            </label>
           </div>
 
           <div className={`edit-modal-textarea-container ${pasteFeedback ? 'paste-feedback' : ''}`}>
