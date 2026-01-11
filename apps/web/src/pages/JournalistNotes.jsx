@@ -38,6 +38,16 @@ function JournalistNotes({ projectId }) {
   const textareaRef = useRef(null)
   const imageInputRef = useRef(null)
   const imageInputId = 'journalist-note-image-input'
+  const openImagePicker = () => {
+    const input = imageInputRef.current
+    if (!input) return
+    try {
+      input.showPicker?.()
+    } catch {
+      // ignore
+    }
+    input.click()
+  }
   const saveTimeoutRef = useRef(null)
 
   const username = 'admin'
@@ -718,21 +728,22 @@ function JournalistNotes({ projectId }) {
               onChange={handleImageSelect}
               style={{
                 position: 'absolute',
-                inset: 0,
-                opacity: 0.01,
-                zIndex: 2,
-                cursor: 'pointer'
+                left: '-9999px',
+                width: '1px',
+                height: '1px',
+                opacity: 0
               }}
             />
-            <label
+            <button
               className="btn-prefix"
-              htmlFor={imageInputId}
               title="Ladda upp bild"
-              style={{ cursor: 'pointer', position: 'relative' }}
+              style={{ cursor: 'pointer' }}
+              onClick={openImagePicker}
+              type="button"
             >
               <ImageIcon size={14} />
               <span>Bild</span>
-            </label>
+            </button>
           </div>
 
           <div className={`edit-modal-textarea-container ${pasteFeedback ? 'paste-feedback' : ''}`}>
