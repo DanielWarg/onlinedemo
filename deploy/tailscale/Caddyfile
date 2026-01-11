@@ -11,6 +11,8 @@
 		Referrer-Policy "no-referrer"
 		# Allow mic/camera for showreel features (röstmemo + bild i anteckningar).
 		Permissions-Policy "geolocation=(), microphone=(self), camera=(self)"
+		# Avoid stale index.html in demo debugging; Vite assets are hashed anyway.
+		Cache-Control "no-store"
 	}
 
 	# Health directly from API

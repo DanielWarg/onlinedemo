@@ -50,6 +50,8 @@ function ProjectDetail() {
   const [exporting, setExporting] = useState(false)
   const [showFortKnoxStation, setShowFortKnoxStation] = useState(false)
   const fileInputRef = useRef(null)
+  const [docPickerTaps, setDocPickerTaps] = useState(0)
+  const [audioPickerTaps, setAudioPickerTaps] = useState(0)
   
   // Recording states
   const [recordingUploading, setRecordingUploading] = useState(false)
@@ -1051,6 +1053,7 @@ function ProjectDetail() {
                       type="file"
                       accept="audio/*"
                       onChange={handleAudioSelect}
+                      onPointerDown={() => setAudioPickerTaps((x) => x + 1)}
                       disabled={isRecording || recordingUploading || recordingProcessing}
                       style={{
                         position: 'absolute',
@@ -1221,6 +1224,7 @@ function ProjectDetail() {
                     type="file"
                     accept=".pdf,.txt"
                     onChange={handleFileSelect}
+                    onPointerDown={() => setDocPickerTaps((x) => x + 1)}
                     disabled={uploading}
                     style={{
                       position: 'absolute',
@@ -1244,6 +1248,9 @@ function ProjectDetail() {
                   </div>
                 </div>
                 <p className="document-upload-help">Ladda upp dokument för automatisk bearbetning och sanering.</p>
+                <p className="document-upload-help" style={{ fontSize: 'var(--font-size-xs)', marginTop: '6px' }}>
+                  (debug) doc-input-klick: {docPickerTaps} · audio-input-klick: {audioPickerTaps}
+                </p>
               </div>
             )}
 
