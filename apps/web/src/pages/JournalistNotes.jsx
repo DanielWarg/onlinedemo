@@ -744,6 +744,14 @@ function JournalistNotes({ projectId }) {
               <ImageIcon size={14} />
               <span>Bild</span>
             </button>
+
+            {/* Debug fallback: direct file input (no JS-trigger) */}
+            <details style={{ marginLeft: '8px' }}>
+              <summary style={{ cursor: 'pointer', color: 'var(--color-text-muted)' }}>Felsök</summary>
+              <div style={{ marginTop: '6px' }}>
+                <input type="file" accept="image/*" onChange={handleImageSelect} />
+              </div>
+            </details>
           </div>
 
           <div className={`edit-modal-textarea-container ${pasteFeedback ? 'paste-feedback' : ''}`}>

@@ -1260,6 +1260,25 @@ function ProjectDetail() {
                   </div>
                 </div>
                 <p className="document-upload-help">Ladda upp dokument för automatisk bearbetning och sanering.</p>
+
+                {/* Debug fallback: direct file input (no JS-trigger). Hidden in details to avoid UI clutter. */}
+                <details style={{ marginTop: 'var(--spacing-md)' }}>
+                  <summary style={{ cursor: 'pointer', color: 'var(--color-text-muted)' }}>
+                    Felsök uppladdning (om filväljaren inte öppnar)
+                  </summary>
+                  <div style={{ marginTop: 'var(--spacing-sm)' }}>
+                    <input
+                      type="file"
+                      accept=".pdf,.txt"
+                      onChange={handleFileSelect}
+                      disabled={uploading}
+                    />
+                    <div style={{ marginTop: '6px', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
+                      Detta är en “rå” filväljare utan special-UI. Om denna öppnar dialogen men dropzonen inte gör det,
+                      är problemet i click-triggern.
+                    </div>
+                  </div>
+                </details>
               </div>
             )}
 
