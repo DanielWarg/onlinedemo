@@ -1,0 +1,103 @@
+/* Intro (Showreel landing) */
+
+.intro-page {
+  flex: 1;
+  min-height: 0;
+  /* Keep the intro truly "one screen" */
+  padding: var(--spacing-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-card {
+  width: min(980px, 100%);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-2xl);
+}
+
+.intro-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.intro-kicker {
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  margin-bottom: var(--spacing-sm);
+}
+
+.intro-title {
+  font-size: clamp(32px, 3.4vw, 48px);
+  font-family: var(--font-serif);
+  margin: 0;
+  line-height: 1.15;
+  color: var(--color-text-primary);
+}
+
+.intro-subtitle {
+  margin: var(--spacing-md) 0 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  line-height: 1.5;
+  font-family: var(--font-sans);
+}
+
+.intro-video-shell {
+  margin-top: var(--spacing-xl);
+  position: relative;
+}
+
+.intro-video {
+  width: 100%;
+  /* Responsive height to avoid scroll on laptops */
+  max-height: min(46vh, 440px);
+  border-radius: var(--radius-sm);
+  background: #000;
+  border: 1px solid var(--color-border-default);
+}
+
+.intro-video-caption {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-sans);
+  letter-spacing: 0.01em;
+  pointer-events: none;
+}
+
+.intro-actions {
+  margin-top: var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.intro-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-sans);
+  user-select: none;
+}
+
+.intro-checkbox input {
+  width: 16px;
+  height: 16px;
+}
+

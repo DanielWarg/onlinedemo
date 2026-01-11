@@ -1,0 +1,22 @@
+[tool.ruff]
+target-version = "py311"
+line-length = 140
+
+# Vi lintar app-kod hårt, men exkluderar tunga benchmark-skript i _verify/ som är mer “lab” än prod.
+extend-exclude = [
+  "alembic/",
+  "_verify/benchmark_*.py",
+  "_verify/aggregate_*.py",
+  "_verify/verify_*.py",
+]
+
+[tool.ruff.lint]
+# Lint i showreel-repo: håll fokus på buggar/smuts (E/F).
+# Import-sorting (I) kan införas senare med formattering/isort om man vill.
+select = ["E", "F"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# Test-fixtures i verifieringen innehåller långa textsträngar (STT-exempel) — vi ignorerar line-length där.
+"_verify/test_*.py" = ["E501"]
+

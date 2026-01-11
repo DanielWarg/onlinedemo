@@ -1,0 +1,1203 @@
+/* Projects List - Using global tokens and Card component */
+
+.projects-list-page {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  /* content-area already provides padding; avoid double-padding that adds scroll */
+  padding: 0;
+}
+
+/* Overview Grid */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  /* More consistent rhythm between cards */
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+@media (min-width: 768px) {
+  .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .overview-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.overview-card {
+  display: flex;
+  flex-direction: column;
+  /* Slightly roomier so Kontrollrum doesn't feel cramped */
+  min-height: 190px;
+  max-height: 190px;
+  height: 190px;
+}
+
+.overview-card-large {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+  .overview-card-large {
+    grid-column: span 1; /* No longer takes full width */
+  }
+}
+
+/* Full width cards (Scout and Dina Projekt) */
+.overview-card-fullwidth {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: var(--spacing-2xl);
+  min-height: auto;
+  max-height: none;
+  height: auto;
+}
+
+/* Scout box - tight, shows 6 items */
+.scout-card-fullwidth {
+  min-height: 230px;
+  max-height: 240px;
+  margin-bottom: var(--spacing-md);
+}
+
+.scout-card-fullwidth .overview-card-header {
+  margin-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-xs);
+}
+
+.scout-card-fullwidth .overview-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: var(--spacing-sm);
+}
+
+.scout-card-fullwidth .scout-widget-list {
+  flex: 1;
+  overflow-y: auto; /* Enable scroll */
+  overflow-x: hidden;
+  margin-bottom: var(--spacing-xs);
+  padding-right: var(--spacing-xs); /* Space for scrollbar */
+  min-height: 0; /* Allow flex shrinking */
+}
+
+/* Custom scrollbar for scout list */
+.scout-card-fullwidth .scout-widget-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scout-card-fullwidth .scout-widget-list::-webkit-scrollbar-track {
+  background: var(--color-bg-subtle);
+  border-radius: 3px;
+}
+
+.scout-card-fullwidth .scout-widget-list::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: 3px;
+}
+
+.scout-card-fullwidth .scout-widget-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Dina Projekt box - tight, same as Scout */
+.projects-card-fullwidth {
+  min-height: 230px;
+  max-height: 240px;
+  margin-bottom: var(--spacing-md);
+}
+
+.projects-card-fullwidth .overview-card-header {
+  margin-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-xs);
+}
+
+.projects-card-fullwidth .overview-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: var(--spacing-sm);
+}
+
+.projects-card-fullwidth .projects-list-compact {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  gap: 2px;
+  padding-right: var(--spacing-xs);
+  margin-bottom: 0;
+}
+
+.overview-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 1px solid var(--color-border-default); /* Clear separation */
+  flex-shrink: 0; /* Don't shrink header */
+}
+
+.overview-card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold); /* Bolder for emphasis */
+  color: var(--color-text-primary);
+  margin: 0;
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em; /* Tighter letter spacing for premium feel */
+  line-height: 1.2;
+}
+
+.overview-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md); /* Comfortable gap */
+  flex: 1;
+  min-height: 0; /* Allows flex children to shrink */
+  overflow: hidden; /* Prevent content overflow */
+  padding-top: var(--spacing-xs); /* Slight indentation from header */
+}
+
+/* Project Widget */
+.project-widget-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Don't shrink search */
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--spacing-md);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.project-search-input {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) calc(var(--spacing-sm) * 2 + 16px); /* Tighter padding */
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm); /* Smaller font */
+  font-family: var(--font-sans);
+  transition: border-color 0.2s;
+}
+
+.project-search-input:focus {
+  outline: none;
+  border-color: var(--color-interactive-default);
+}
+
+.dark .project-search-input {
+  background: var(--color-bg-surface);
+  border-color: var(--color-border-default);
+}
+
+.btn-create-project-inline {
+  width: 100%;
+  margin: 0;
+  padding: var(--spacing-sm) var(--spacing-md); /* Tighter padding */
+  font-size: var(--font-size-sm); /* Smaller font */
+  flex-shrink: 0; /* Don't shrink button */
+}
+
+.project-widget-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  flex-shrink: 0;
+  padding-top: var(--spacing-xs); /* Visual separation */
+  border-top: 1px solid var(--color-border-default); /* Subtle divider */
+  margin-top: var(--spacing-xs);
+}
+
+.project-widget-meta-label {
+  font-weight: var(--font-weight-medium);
+}
+
+.project-widget-meta-value {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.project-widget-count {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  flex-shrink: 0;
+  margin-top: auto; /* Push to bottom */
+  padding-top: var(--spacing-xs);
+  border-top: 1px solid var(--color-border-default); /* Subtle divider */
+}
+
+.project-widget-count-label {
+  font-weight: var(--font-weight-medium);
+}
+
+.project-widget-count-value {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Due Dates Widget */
+.due-dates-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs); /* Tighter gap */
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: var(--spacing-xs); /* Space for scrollbar */
+  min-height: 0;
+}
+
+/* Custom scrollbar for due dates list */
+.due-dates-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.due-dates-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.due-dates-list::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: 2px;
+}
+
+.dark .due-dates-list::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+}
+
+.due-date-item {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s;
+}
+
+.due-date-item:hover {
+  opacity: 0.8;
+}
+
+.due-date-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.due-date-item-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.4; /* Better readability */
+}
+
+.due-date-item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.due-date-item-date {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+}
+
+/* Projects List Compact (inside widget) */
+.projects-list-compact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs); /* Tighter gap */
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: var(--spacing-xs); /* Space for scrollbar */
+  min-height: 0;
+}
+
+/* Override for fullwidth projects card */
+.projects-card-fullwidth .projects-list-compact {
+  gap: 2px;
+}
+
+.projects-list-compact::-webkit-scrollbar {
+  width: 4px;
+}
+
+.projects-list-compact::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.projects-list-compact::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: 2px;
+}
+
+.dark .projects-list-compact::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+}
+
+.project-item-compact {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.project-item-compact:hover {
+  opacity: 0.8;
+}
+
+.project-item-compact-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) 0;
+}
+
+.projects-card-fullwidth .project-item-compact-content {
+  padding: 4px 0;
+  gap: 2px;
+}
+
+.project-item-main {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.project-item-icon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.project-item-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-left: calc(14px + var(--spacing-xs)); /* Align with name */
+  font-size: var(--font-size-xs);
+}
+
+.project-status-badge {
+  padding: 2px 6px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xs);
+  font-size: 0.625rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  font-family: var(--font-sans);
+}
+
+.project-due-date-badge {
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  font-family: var(--font-sans);
+}
+
+.project-due-date-badge.warning {
+  color: var(--color-accent-warning);
+  font-weight: var(--font-weight-semibold);
+}
+
+.project-due-date-badge.danger {
+  color: var(--color-brand-red);
+  font-weight: var(--font-weight-semibold);
+}
+
+.deadline-badge-small {
+  font-size: 0.625rem;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+
+/* Placeholder Widgets */
+.overview-empty-state {
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overview-empty-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  margin: 0;
+  font-style: italic; /* Indicates placeholder state */
+}
+
+.overview-placeholder-text {
+  font-size: var(--font-size-sm); /* Readable size */
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  line-height: 1.5; /* Comfortable reading */
+  margin: 0;
+  flex: 1; /* Take available space */
+  display: flex;
+  align-items: flex-start;
+  padding-top: var(--spacing-xs); /* Slight indentation */
+}
+
+
+.coming-soon-badge {
+  font-size: 0.625rem; /* Smaller, secondary */
+  padding: 3px 8px;
+  background: rgba(245, 158, 11, 0.08); /* More subtle */
+  color: var(--color-accent-warning);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dark .coming-soon-badge {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+/* Disabled action uses shared .btn styles; avoid special casing */
+
+/* Projects Section */
+.projects-section {
+  margin-top: var(--spacing-3xl);
+}
+
+.projects-section-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xl);
+  font-family: var(--font-sans);
+}
+
+.projects-page {
+  padding: var(--spacing-2xl);
+}
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.projects-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-serif);
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 0;
+  padding: 0;
+}
+
+/* Buttons use shared .btn styles from ui/Button.css */
+
+.projects-empty {
+  text-align: center;
+  padding: var(--spacing-4xl) 0;
+  color: var(--color-text-muted);
+}
+
+.empty-icon {
+  margin: 0 auto var(--spacing-xl);
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-sans);
+}
+
+.empty-text {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-3xl);
+  font-family: var(--font-sans);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--spacing-xl);
+}
+
+@media (min-width: 768px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.project-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Project card content styling - Card component handles container */
+.project-card {
+  /* Card component provides: background, border, padding, radius */
+}
+
+.project-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm); /* Tightened spacing */
+}
+
+.project-icon {
+  color: var(--color-text-muted);
+}
+
+.project-card-title {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm); /* Tightened spacing */
+  font-size: var(--font-size-lg);
+  font-family: var(--font-sans);
+  line-height: 1.3;
+}
+
+.project-card-meta {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs); /* Tightened gap */
+  font-family: var(--font-sans);
+  margin-top: var(--spacing-xs); /* Minimal top margin */
+}
+
+.project-card-meta p {
+  margin: 0;
+}
+
+.project-card-description {
+  margin-top: var(--spacing-sm);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-due-date {
+  margin: 0;
+}
+
+.project-due-date-normal {
+  color: var(--color-text-muted);
+}
+
+.project-due-date-due-soon {
+  color: var(--color-accent-warning);
+  font-weight: var(--font-weight-semibold);
+}
+
+.project-due-date-overdue {
+  color: var(--color-brand-red);
+  font-weight: var(--font-weight-semibold);
+}
+
+.project-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+  align-items: center;
+}
+
+.tag-badge-small {
+  font-size: 0.625rem;
+  padding: 2px 6px;
+}
+
+.project-tags-more {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-left: var(--spacing-xs);
+}
+
+/* Due date row styling */
+.project-due-date-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin: 0;
+}
+
+.project-due-date-muted {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* Urgency badge variants (reused from Dashboard) */
+.deadline-badge {
+  font-size: var(--font-size-xs);
+  padding: 2px 8px;
+}
+
+.deadline-badge.warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-accent-warning);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.dark .deadline-badge.warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.deadline-badge.danger {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--color-brand-red);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+.dark .deadline-badge.danger {
+  background: rgba(220, 38, 38, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+/* Scout Widget - tipsstrålkastare style */
+.scout-widget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.scout-widget-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-sans);
+  padding: 6px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s;
+}
+
+.scout-widget-item-link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.scout-widget-item-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+.scout-widget-item-create-btn,
+.scout-widget-item-hide-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xs);
+  background: transparent;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scout-widget-item-create-btn {
+  padding: 6px 10px;
+  font-size: var(--font-size-xs);
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.scout-widget-item-create-btn:hover {
+  background: var(--color-interactive-default);
+  color: var(--color-interactive-text);
+  border-color: var(--color-interactive-default);
+}
+
+.scout-widget-item-hide-btn:hover {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+}
+
+.scout-widget-item-create-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.scout-widget-item:hover,
+.scout-widget-item-link:hover {
+  background-color: var(--color-bg-subtle);
+}
+
+.scout-widget-badge {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs); /* Keep badge small */
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scout-widget-title {
+  flex: 1;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-sm); /* Increased from xs to sm */
+}
+
+.scout-widget-time {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs); /* Keep time small */
+  flex-shrink: 0;
+  /* Make the date/time read as a clean left-aligned column (not ragged) */
+  min-width: 96px;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-overview {
+  margin-top: var(--spacing-xs);
+  align-self: flex-start;
+}
+
+/* Scout box actions */
+.scout-box-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
+  align-items: center;
+}
+
+.btn-scout-refresh {
+  flex-shrink: 0;
+}
+
+.btn-scout-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-scout-refresh .spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Scout Modal */
+.scout-modal-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+  max-height: 80vh;
+}
+
+.scout-modal-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border-default);
+  margin-bottom: var(--spacing-lg);
+}
+
+.scout-modal-tab {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-sans);
+}
+
+.scout-modal-tab:hover {
+  color: var(--color-text-primary);
+}
+
+.scout-modal-tab.active {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-interactive-default);
+}
+
+.scout-modal-tab-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scout-modal-actions {
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.scout-modal-fetch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-interactive-default);
+  color: var(--color-interactive-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-family: var(--font-sans);
+}
+
+.scout-modal-fetch-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.scout-modal-fetch-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.scout-modal-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.scout-modal-item {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.scout-modal-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.scout-modal-item-time {
+  font-size: var(--font-size-xs);
+  min-width: 96px;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.scout-modal-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.scout-modal-item-link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  transition: color 0.2s;
+}
+
+.scout-modal-item-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+.scout-modal-item-create-btn,
+.scout-modal-item-hide-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: transparent;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-sans);
+}
+
+.scout-modal-item-create-btn {
+  background: var(--color-interactive-default);
+  color: var(--color-interactive-text);
+  border-color: var(--color-interactive-default);
+}
+
+.scout-modal-item-create-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  background: var(--color-interactive-hover);
+}
+
+.scout-modal-item-hide-btn:hover {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+}
+
+.scout-modal-item-create-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.scout-modal-item-link:hover {
+  color: var(--color-interactive-default);
+}
+
+.scout-modal-item-link svg {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.scout-modal-item-link:hover svg {
+  color: var(--color-interactive-default);
+}
+
+.scout-modal-item-title {
+  flex: 1;
+}
+
+.scout-modal-empty,
+.scout-modal-loading {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--spacing-4xl) 0;
+  font-size: var(--font-size-base);
+  font-family: var(--font-sans);
+}
+
+/* Feeds Tab */
+.scout-modal-feeds-form {
+  margin-bottom: var(--spacing-xl);
+}
+
+.scout-modal-feeds-form-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+}
+
+.scout-modal-feeds-form-fields {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.scout-modal-feeds-input {
+  flex: 1;
+  min-width: 200px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-family: var(--font-sans);
+}
+
+.scout-modal-feeds-input:focus {
+  outline: none;
+  border-color: var(--color-interactive-default);
+}
+
+.scout-modal-feeds-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-interactive-default);
+  color: var(--color-interactive-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-family: var(--font-sans);
+}
+
+.scout-modal-feeds-add-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.scout-modal-feeds-add-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.scout-modal-feeds-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.scout-modal-feed-item {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.scout-modal-feed-item.disabled {
+  opacity: 0.7;
+  background-color: var(--color-bg-subtle);
+}
+
+.scout-modal-feed-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.scout-modal-feed-name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+.scout-modal-feed-url {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  word-break: break-all;
+  font-family: var(--font-sans);
+}
+
+.scout-modal-feed-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.scout-modal-feed-create-project-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-interactive-default);
+  color: var(--color-interactive-text);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-sans);
+}
+
+.scout-modal-feed-create-project-btn:hover {
+  opacity: 0.9;
+  background: var(--color-interactive-hover);
+}
+
+.scout-modal-feed-disable-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-brand-red);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s;
+}
+
+.scout-modal-feed-disable-btn:hover:not(:disabled) {
+  background-color: rgba(220, 38, 38, 0.1);
+}
+
+.scout-modal-feed-disable-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,762 @@
+/* Fort Knox Panel - Premium "Locked Room" Design */
+
+.fortknox-panel {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+}
+
+.fortknox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-md);
+}
+
+.fortknox-header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.fortknox-lock-icon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.fortknox-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.fortknox-subtitle {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+  font-weight: var(--font-weight-normal);
+}
+
+.fortknox-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.fortknox-status-pass {
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--color-accent-success);
+  border-color: rgba(5, 150, 105, 0.25);
+}
+
+.fortknox-status-working {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.fortknox-status-blocked,
+.fortknox-status-error {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--color-brand-red);
+  border-color: rgba(220, 38, 38, 0.25);
+}
+
+.fortknox-status-offline {
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--color-accent-warning);
+  border-color: rgba(249, 115, 22, 0.25);
+}
+
+.fortknox-status-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.fortknox-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.fortknox-policy-selector {
+  display: flex;
+  gap: var(--spacing-xs);
+  background: var(--color-bg-active);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.fortknox-segmented-btn {
+  flex: 1;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fortknox-segmented-btn:hover:not(:disabled) {
+  background: var(--color-bg-hover);
+}
+
+.fortknox-segmented-btn.active {
+  background: var(--color-interactive-default);
+  color: var(--color-interactive-text);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.fortknox-segmented-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fortknox-template-selector {
+  width: 100%;
+}
+
+.fortknox-template-select {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+}
+
+.fortknox-compile-btn {
+  width: 100%;
+}
+
+.fortknox-idempotency-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Loading Skeleton */
+.fortknox-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.fortknox-loading-hint {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.fortknox-skeleton {
+  height: 20px;
+  background: var(--color-bg-active);
+  border-radius: var(--radius-sm);
+  width: 100%;
+}
+
+.fortknox-skeleton.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-active) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    var(--color-bg-active) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* BLOCKED Card - Fix-it Flow */
+.fortknox-blocked-card {
+  background: rgba(220, 38, 38, 0.05);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+  animation: fadeIn 0.3s ease-in;
+}
+
+.fortknox-blocked-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-brand-red);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.fortknox-blocked-explanation {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-lg) 0;
+  line-height: 1.6;
+}
+
+.fortknox-blocked-section-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.fortknox-blocked-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.fortknox-blocked-group {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+}
+
+.fortknox-blocked-group-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.fortknox-blocked-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fortknox-blocked-item {
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.fortknox-blocked-item:last-child {
+  border-bottom: none;
+}
+
+.fortknox-blocked-item-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.fortknox-blocked-item-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex: 1;
+  min-width: 0;
+}
+
+.fortknox-blocked-item-link {
+  flex: 1;
+  min-width: 120px;
+  font-size: var(--font-size-sm);
+  color: var(--color-interactive-default);
+  font-family: var(--font-mono);
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  transition: color 0.2s;
+  display: inline-block;
+}
+
+.fortknox-blocked-item-link:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fortknox-blocked-item-link:hover {
+  color: var(--color-interactive-hover);
+  text-decoration: underline;
+}
+
+.fortknox-note-link {
+  color: var(--color-interactive-default);
+}
+
+.fortknox-note-link:hover {
+  color: var(--color-interactive-hover);
+}
+
+.fortknox-blocked-item-id {
+  font-size: var(--font-size-sm);
+  color: inherit;
+  font-family: var(--font-mono);
+}
+
+.fortknox-fix-error {
+  font-size: var(--font-size-xs);
+  color: var(--color-brand-red);
+  font-style: italic;
+}
+
+.fortknox-error-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.fortknox-exclude-btn {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  white-space: nowrap;
+}
+
+.fortknox-edit-doc-btn {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xs);
+  min-width: auto;
+  flex-shrink: 0;
+}
+
+/* Edit Document Modal Styles */
+.fortknox-edit-document-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  min-height: 0;
+  height: 100%;
+}
+
+.fortknox-edit-document-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.fortknox-edit-document-meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.fortknox-edit-document-meta-label {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  min-width: 120px;
+}
+
+.fortknox-edit-document-meta-masked {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: var(--spacing-sm);
+}
+
+.fortknox-edit-document-textarea-container {
+  flex: 1;
+  min-height: 300px;
+}
+
+.fortknox-edit-document-textarea {
+  width: 100%;
+  min-height: 300px;
+  padding: var(--spacing-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background: var(--color-bg-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  resize: vertical;
+}
+
+.fortknox-edit-document-textarea:focus {
+  outline: none;
+  border-color: var(--color-interactive-default);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.fortknox-edit-document-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-default);
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.fortknox-note-limitation {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.fortknox-not-ready-badge {
+  font-size: var(--font-size-xs);
+}
+
+.fortknox-fixed-badge {
+  font-size: var(--font-size-xs);
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--color-accent-success);
+  border-color: rgba(5, 150, 105, 0.25);
+}
+
+.fortknox-fix-btn {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  white-space: nowrap;
+}
+
+.fortknox-fix-error {
+  font-size: var(--font-size-xs);
+  color: var(--color-brand-red);
+  font-style: italic;
+  margin-left: var(--spacing-xs);
+}
+
+.fortknox-note-limitation {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-left: var(--spacing-xs);
+}
+
+.fortknox-note-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+/* Document Modal Styles */
+.fortknox-document-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4xl);
+  gap: var(--spacing-lg);
+}
+
+.fortknox-document-loading .spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.fortknox-document-modal {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.fortknox-document-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 1px solid var(--color-border-default);
+  margin-bottom: var(--spacing-xl);
+}
+
+.fortknox-document-meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.fortknox-document-meta-label {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  min-width: 120px;
+}
+
+.fortknox-document-meta-masked {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: var(--spacing-sm);
+}
+
+.fortknox-document-text {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.fortknox-document-line {
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.fortknox-blocked-help {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin: var(--spacing-md) 0 0 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.fortknox-all-fixed {
+  background: rgba(5, 150, 105, 0.1);
+  border: 1px solid rgba(5, 150, 105, 0.25);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.fortknox-all-fixed-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-accent-success);
+  margin: 0;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Error Cards */
+.fortknox-error-card {
+  background: rgba(220, 38, 38, 0.05);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+  animation: fadeIn 0.3s ease-in;
+}
+
+.fortknox-offline-card {
+  background: rgba(249, 115, 22, 0.05);
+  border-color: rgba(249, 115, 22, 0.2);
+}
+
+.fortknox-error-state-card {
+  background: rgba(220, 38, 38, 0.05);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fortknox-error-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-brand-red);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.fortknox-offline-card .fortknox-error-title {
+  color: var(--color-accent-warning);
+}
+
+.fortknox-error-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.fortknox-error-reasons {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-md) 0 0 0;
+}
+
+.fortknox-error-reasons li {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.fortknox-error-reasons li:last-child {
+  border-bottom: none;
+}
+
+.fortknox-error-code {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-sm);
+}
+
+/* Report Container */
+.fortknox-report-container {
+  margin-top: var(--spacing-xl);
+  animation: fadeIn 0.3s ease-in;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-top: 3px solid var(--color-accent-success);
+  padding-top: var(--spacing-xl);
+  background: rgba(5, 150, 105, 0.02);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+}
+
+.fortknox-report-header {
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.fortknox-report-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.fortknox-report-saved {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.fortknox-report-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent-success);
+  margin: 0;
+}
+
+.fortknox-report-info {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+.fortknox-report-info-external {
+  background: rgba(5, 150, 105, 0.05);
+  border-color: rgba(5, 150, 105, 0.2);
+}
+
+.fortknox-report-paper {
+  background: var(--color-bg-surface);
+  border: 2px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-2xl);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-bottom: var(--spacing-md);
+  min-height: 200px;
+  max-height: 70vh;
+  overflow-y: auto;
+  width: 100%;
+  display: block;
+  margin-top: var(--spacing-md);
+}
+
+.fortknox-markdown-content {
+  font-family: var(--font-serif);
+  line-height: 1.8;
+  color: var(--color-text-primary);
+}
+
+.fortknox-markdown-h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin: var(--spacing-xl) 0 var(--spacing-lg) 0;
+  color: var(--color-text-primary);
+}
+
+.fortknox-markdown-h1:first-child {
+  margin-top: 0;
+}
+
+.fortknox-markdown-h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+  color: var(--color-text-primary);
+}
+
+.fortknox-markdown-p {
+  margin: var(--spacing-md) 0;
+  color: var(--color-text-primary);
+}
+
+.fortknox-markdown-li {
+  margin: var(--spacing-sm) 0;
+  padding-left: var(--spacing-md);
+  position: relative;
+  color: var(--color-text-primary);
+}
+
+.fortknox-markdown-li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--color-text-muted);
+}
+
+/* Audit Footer */
+.fortknox-audit-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+.fortknox-audit-item {
+  display: inline-block;
+}
+
+.fortknox-cache-badge {
+  margin-right: var(--spacing-xs);
+}

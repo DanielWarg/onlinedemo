@@ -1,0 +1,42 @@
+# Genererade artefakter (måste vara gitignored enligt agent.md)
+test_results/
+uploads/
+temp_audio/
+transcripts/
+caches/
+build/
+dist/
+*.pyc
+__pycache__/
+.venv/
+venv/
+node_modules/
+*.log
+.DS_Store
+.cursor/
+.pytest_cache/
+
+# Demo/showreel assets (läggs lokalt, inte i git)
+showreel*.txt
+*.mp4
+*.wav
+
+# Model files
+*.model
+*.bin
+*.pt
+*.pth
+*.onnx
+models/
+checkpoints/
+uploads/
+
+# Känsliga miljövariabler och secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets/
+*.secret
+

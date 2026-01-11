@@ -1,0 +1,439 @@
+/* Fort Knox Station - Full-height drawer/slide-over */
+
+.fortknox-station-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.fortknox-station-drawer {
+  width: 90%;
+  max-width: 1400px;
+  height: 100%;
+  background: var(--color-bg-surface);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.3s ease-out;
+  overflow: hidden;
+}
+
+.fortknox-station-embedded-root {
+  width: 100%;
+}
+
+.fortknox-station-drawer-embedded {
+  width: 100%;
+  max-width: none;
+  height: auto;
+  box-shadow: none;
+  animation: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.fortknox-station-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.fortknox-station-explain {
+  padding: 0 var(--spacing-lg) var(--spacing-sm) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.fortknox-station-explain p {
+  margin: var(--spacing-sm) 0;
+}
+
+.fortknox-station-explain strong {
+  color: var(--color-text-primary);
+}
+
+.fortknox-station-explain-muted {
+  margin-left: var(--spacing-xs);
+  color: var(--color-text-tertiary);
+}
+
+.fortknox-loading-hint {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.fortknox-report-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+}
+
+.fortknox-report-saved {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.fortknox-station-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.fortknox-station-title h2 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.fortknox-station-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  color: var(--color-text-secondary);
+  transition: color 0.2s;
+}
+
+.fortknox-station-close:hover {
+  color: var(--color-text-primary);
+}
+
+.fortknox-station-tabs {
+  display: flex;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.fortknox-tab {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  transition: all 0.2s;
+}
+
+.fortknox-tab:hover {
+  color: var(--color-text-primary);
+}
+
+.fortknox-tab.active {
+  color: var(--color-interactive-default);
+  border-bottom-color: var(--color-interactive-default);
+  font-weight: var(--font-weight-medium);
+}
+
+.fortknox-station-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+}
+
+.fortknox-station-external {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  overflow: hidden;
+}
+
+.fortknox-station-selection {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid var(--color-border-default);
+  padding-right: var(--spacing-lg);
+  min-width: 0;
+  min-height: 0;
+}
+
+.fortknox-station-selection h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.fortknox-item-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.fortknox-item-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-elevated);
+  transition: all 0.2s;
+}
+
+.fortknox-item-row.blocking {
+  /* BLOCKED är en förväntad guardrail – använd varning (inte “felrött”) */
+  border-color: var(--color-accent-warning);
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.fortknox-fix-hint {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.fortknox-item-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 0;
+}
+
+.fortknox-item-type {
+  color: var(--color-text-muted);
+}
+
+.fortknox-item-title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fortknox-item-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+.row-inline-help {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-right: var(--spacing-xs);
+}
+
+.fortknox-station-result {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+}
+
+.fortknox-station-controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.fortknox-inline-hint {
+  align-self: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+}
+
+.fortknox-fix-center {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-accent-warning);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.fortknox-fix-center h4 {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-accent-warning);
+}
+
+.fortknox-fix-center ul {
+  margin: 0;
+  padding-left: var(--spacing-lg);
+}
+
+.fortknox-error-card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-accent-error);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.fortknox-error-card h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--color-accent-error);
+}
+
+.fortknox-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+}
+
+.fortknox-skeleton {
+  height: 20px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-sm);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.fortknox-report-container {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  border-top: 3px solid var(--color-accent-success);
+}
+
+/* Responsiv: stapla kolumner om viewport är smal */
+@media (max-width: 900px) {
+  .fortknox-station-external {
+    grid-template-columns: 1fr;
+  }
+
+  .fortknox-station-selection {
+    border-right: none;
+    padding-right: 0;
+    border-bottom: 1px solid var(--color-border-default);
+    padding-bottom: var(--spacing-lg);
+  }
+}
+
+.fortknox-report-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-accent-success);
+  font-weight: var(--font-weight-semibold);
+}
+
+.fortknox-markdown {
+  line-height: 1.6;
+}
+
+.fortknox-markdown h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+}
+
+.fortknox-markdown h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+}
+
+.fortknox-markdown h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  margin: var(--spacing-sm) 0;
+}
+
+.fortknox-markdown p {
+  margin: var(--spacing-sm) 0;
+}
+
+.fortknox-markdown li {
+  margin: var(--spacing-xs) 0;
+  padding-left: var(--spacing-sm);
+}
+
+.fortknox-audit-footer {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-default);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.fortknox-edit-modal {
+  /* Modal-body sköter padding + scroll. Gör edit-layouten stabil med sticky actions. */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+}
+
+.fortknox-edit-modal h3 {
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.fortknox-edit-modal textarea {
+  width: 100%;
+  min-height: 280px;
+  flex: 1;
+  resize: vertical;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  margin-bottom: 0;
+}
+
+.fortknox-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  position: sticky;
+  bottom: 0;
+  padding-top: var(--spacing-md);
+  background: var(--color-bg-surface);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

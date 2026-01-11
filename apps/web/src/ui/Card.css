@@ -1,0 +1,24 @@
+/* Card Component - Copy/Paste pattern with tokens */
+/* Used for: project cards, info panels, modals, workspace containers */
+
+.card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-lg) var(--spacing-xl); /* Reduced vertical padding */
+  box-shadow: var(--shadow-sm);
+}
+
+.card-interactive {
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card-interactive:hover {
+  border-color: var(--focus-ring-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.dark .card-interactive:hover {
+  border-color: var(--focus-ring-color-dark);
+}

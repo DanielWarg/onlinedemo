@@ -1,0 +1,55 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      # Inside docker network, proxy to api service
+      API_UPSTREAM: http://api:8000
+      # Serve the Vite build output mounted from host
+      WEB_DIST: /srv
+    ports:
+      - "127.0.0.1:8443:8443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../../apps/web/dist:/srv:ro
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-arbetsytan}
+      POSTGRES_USER: ${POSTGRES_USER:-arbetsytan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-arbetsytan}
+    volumes:
+      - arbetsytan_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ../../apps/api
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://arbetsytan:arbetsytan@postgres:5432/arbetsytan}
+      AUTH_MODE: ${AUTH_MODE:-basic}
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER:-admin}
+      BASIC_AUTH_PASS: ${BASIC_AUTH_PASS:-password}
+      DEMO_MODE: ${DEMO_MODE:-true}
+      ASYNC_JOBS: ${ASYNC_JOBS:-0}
+      PRELOAD_STT: ${PRELOAD_STT:-0}
+      CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS:-http://localhost:8443}
+      FORTKNOX_ENGINE_ID: ${FORTKNOX_ENGINE_ID:-local_llm}
+      FORTKNOX_TESTMODE: ${FORTKNOX_TESTMODE:-0}
+      FORTKNOX_REMOTE_URL: ${FORTKNOX_REMOTE_URL:-}
+      POSTGRES_DB: ${POSTGRES_DB:-arbetsytan}
+      POSTGRES_USER: ${POSTGRES_USER:-arbetsytan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-arbetsytan}
+    depends_on:
+      - postgres
+    volumes:
+      - arbetsytan_uploads:/app/uploads
+    restart: unless-stopped
+
+volumes:
+  arbetsytan_pgdata:
+  arbetsytan_uploads:
+

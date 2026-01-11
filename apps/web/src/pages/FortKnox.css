@@ -1,0 +1,141 @@
+/* Fort Knox Page */
+
+.fortknox-page {
+  padding: var(--spacing-3xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.fortknox-page-header {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.fortknox-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-lg);
+  transition: color 0.2s;
+}
+
+.fortknox-back-link:hover {
+  color: var(--color-text-primary);
+}
+
+.fortknox-page-title-section {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+}
+
+.fortknox-page-title-left {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.fortknox-page-icon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.fortknox-page-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-xs) 0;
+  font-family: var(--font-serif);
+}
+
+.fortknox-page-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+  font-weight: var(--font-weight-normal);
+}
+
+.fortknox-page-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.fortknox-project-selector-section {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+}
+
+.fortknox-project-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.fortknox-project-select {
+  /* Inherit Select component styles, only override if needed */
+}
+
+.fortknox-loading-projects {
+  padding: var(--spacing-md);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.fortknox-no-projects {
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.fortknox-no-projects p {
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.fortknox-create-link {
+  color: var(--color-interactive-default);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.fortknox-create-link:hover {
+  text-decoration: underline;
+}
+
+.fortknox-panel-container {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fortknox-select-prompt {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.fortknox-select-prompt p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}

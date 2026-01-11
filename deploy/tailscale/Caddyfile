@@ -1,0 +1,33 @@
+{
+	# Tailscale Funnel terminates TLS. Caddy should NOT manage TLS here.
+	auto_https off
+}
+
+:8443 {
+	# Security headers (showreel-safe)
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		# Allow mic/camera for showreel features (röstmemo + bild i anteckningar).
+		Permissions-Policy "geolocation=(), microphone=(self), camera=(self)"
+	}
+
+	# Health directly from API
+	handle /health* {
+		reverse_proxy {$API_UPSTREAM}
+	}
+
+	# API (keep /api prefix; backend expects /api/*)
+	handle /api/* {
+		reverse_proxy {$API_UPSTREAM}
+	}
+
+	# Frontend static (Vite build output)
+	handle {
+		root * {$WEB_DIST}
+		try_files {path} /index.html
+		file_server
+	}
+}
+

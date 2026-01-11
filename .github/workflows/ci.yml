@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend-tests:
+    name: Backend (pytest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: |
+            apps/api/requirements.txt
+            requirements-dev.txt
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint (ruff)
+        run: |
+          ruff check .
+
+      - name: Run tests (verify suite)
+        run: |
+          pytest -q _verify/test_*.py
+
+  web-build:
+    name: Web (build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: |
+            apps/web/package-lock.json
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        env:
+          VITE_API_BASE: /api
+        run: npm run build
+
+  compose-smoke:
+    name: Demo compose (smoke)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start demo stack
+        run: |
+          docker compose -f deploy/tailscale/docker-compose.prod.yml up -d --build
+
+      - name: Wait for health
+        run: |
+          set -e
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:8443/api/health >/dev/null 2>&1; then
+              echo "OK"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Health check failed"
+          docker compose -f deploy/tailscale/docker-compose.prod.yml logs --no-color --tail=200
+          exit 1
+
+      - name: E2E smoke (API)
+        run: |
+          bash deploy/tailscale/scripts/smoke_local.sh http://localhost:8443
+
+      - name: Shutdown
+        if: always()
+        run: |
+          docker compose -f deploy/tailscale/docker-compose.prod.yml down -v
+

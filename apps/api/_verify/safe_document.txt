@@ -1,0 +1,9 @@
+Kontakt: test@example.com
+Telefon: 070-123 45 67
+Datum: 2025-11-20
+Belopp: 24 698 kr
+Mål: Ä 16923-25
+
+Detta är en testfil som ska passera normal eller strict masking.
+Inga personnummer, inga födelsedatum, inga unmasked ID labels.
+

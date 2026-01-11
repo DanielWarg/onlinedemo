@@ -1,0 +1,50 @@
+/* Badge Component - Copy/Paste compact rectangular pattern */
+
+.badge {
+  display: inline-block;
+  font-size: 0.6875rem; /* ~11px */
+  padding: 0.125rem 0.5rem; /* 2px vertical, 8px horizontal */
+  border-radius: 3px;
+  font-weight: var(--font-weight-medium); /* 500 */
+  font-family: var(--font-sans);
+  line-height: 1.2;
+}
+
+/* Normal/Offentlig - Tinted green rectangular */
+.badge-normal {
+  background: rgba(16, 185, 129, 0.1); /* green-500/10 */
+  color: var(--color-classification-offentlig);
+  border: 1px solid rgba(16, 185, 129, 0.25); /* 25% opacity */
+}
+
+.dark .badge-normal {
+  background: rgba(5, 150, 105, 0.12); /* green-600/12 - slightly higher for dark */
+  color: #10b981; /* green-500 */
+  border: 1px solid rgba(5, 150, 105, 0.3);
+}
+
+/* Sensitive/Känslig - Tinted orange rectangular */
+.badge-sensitive {
+  background: rgba(249, 115, 22, 0.1); /* orange-500/10 */
+  color: var(--color-classification-kanslig);
+  border: 1px solid rgba(249, 115, 22, 0.25); /* 25% opacity */
+}
+
+.dark .badge-sensitive {
+  background: rgba(234, 88, 12, 0.12); /* orange-600/12 */
+  color: #f97316; /* orange-500 */
+  border: 1px solid rgba(234, 88, 12, 0.3);
+}
+
+/* Source-sensitive/Källkritisk - Tinted red rectangular */
+.badge-source-sensitive {
+  background: rgba(220, 38, 38, 0.1); /* red-600/10 */
+  color: var(--color-brand-red);
+  border: 1px solid rgba(220, 38, 38, 0.25); /* 25% opacity */
+}
+
+.dark .badge-source-sensitive {
+  background: rgba(220, 38, 38, 0.12); /* red-600/12 */
+  color: #fca5a5; /* red-300 */
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}

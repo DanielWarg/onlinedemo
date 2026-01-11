@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Polisen – Västra Götaland</title>
+    <description>Test feed for verification</description>
+    <link>https://polisen.se</link>
+    <item>
+      <title>04 januari 07.00 – Sammanfattning natt, Västra Götalands län</title>
+      <link>https://polisen.se/article1</link>
+      <guid>test-guid-1</guid>
+      <pubDate>Mon, 04 Jan 2024 07:00:00 +0100</pubDate>
+      <description><![CDATA[<p>En sammanfattning av natthändelser i Västra Götaland.</p>]]></description>
+    </item>
+    <item>
+      <title>Trafikolycka, Uddevalla</title>
+      <link>https://polisen.se/article2</link>
+      <guid>test-guid-2</guid>
+      <pubDate>Mon, 04 Jan 2024 12:42:00 +0100</pubDate>
+      <description><![CDATA[<p>En trafikolycka inträffade i Uddevalla.</p>]]></description>
+    </item>
+    <item>
+      <title>Brand i Göteborg</title>
+      <link>https://polisen.se/article3</link>
+      <guid>test-guid-3</guid>
+      <pubDate>Tue, 05 Jan 2024 10:00:00 +0100</pubDate>
+      <description><![CDATA[<p>En brand rapporterades i Göteborg.</p>]]></description>
+    </item>
+  </channel>
+</rss>

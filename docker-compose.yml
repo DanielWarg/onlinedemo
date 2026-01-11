@@ -1,0 +1,77 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: arbetsytan
+      POSTGRES_USER: arbetsytan
+      POSTGRES_PASSWORD: arbetsytan
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arbetsytan"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      AUTH_MODE: ${AUTH_MODE:-basic}
+      DEMO_MODE: ${DEMO_MODE:-false}
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER:-admin}
+      BASIC_AUTH_PASS: ${BASIC_AUTH_PASS:-password}
+      DATABASE_URL: postgresql://arbetsytan:arbetsytan@postgres:5432/arbetsytan
+      STT_ENGINE: ${STT_ENGINE:-faster_whisper}
+      WHISPER_MODEL: ${WHISPER_MODEL:-small}
+      # Optional: OpenAI (STT/LLM) - only used if you enable the relevant providers.
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_STT_MODEL: ${OPENAI_STT_MODEL:-whisper-1}
+      OPENAI_STT_LANGUAGE: ${OPENAI_STT_LANGUAGE:-}
+      # Live Fort Knox via Fort Knox Local på samma Mac (docker desktop):
+      # Fort Knox Local lyssnar på host:8787 -> nås från container via host.docker.internal
+      FORTKNOX_REMOTE_URL: ${FORTKNOX_REMOTE_URL:-http://host.docker.internal:8787}
+      FORTKNOX_TESTMODE: ${FORTKNOX_TESTMODE:-0}
+      FORTKNOX_ENGINE_ID: ${FORTKNOX_ENGINE_ID:-local_llm}
+      # Optional: LangChain pipeline (se ONEPAGER.md / deploy env.example)
+      FORTKNOX_PIPELINE: ${FORTKNOX_PIPELINE:-default}
+      FORTKNOX_LC_PROVIDER: ${FORTKNOX_LC_PROVIDER:-local}
+      FORTKNOX_LC_BASE_URL: ${FORTKNOX_LC_BASE_URL:-}
+      FORTKNOX_LC_API_KEY: ${FORTKNOX_LC_API_KEY:-local}
+      FORTKNOX_LC_MODEL: ${FORTKNOX_LC_MODEL:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./apps/api:/app
+      - ./docker-compose.yml:/docker-compose.yml:ro  # Read-only mount for Fort Knox verification
+      - whisper_cache:/root/.cache/whisper
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      - VITE_API_URL=
+
+volumes:
+  postgres_data:
+  whisper_cache:
+
