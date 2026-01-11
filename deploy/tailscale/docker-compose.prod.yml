@@ -31,6 +31,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://arbetsytan:arbetsytan@postgres:5432/arbetsytan}
       AUTH_MODE: ${AUTH_MODE:-basic}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
       BASIC_AUTH_USER: ${BASIC_AUTH_USER:-admin}
       BASIC_AUTH_PASS: ${BASIC_AUTH_PASS:-password}
       DEMO_MODE: ${DEMO_MODE:-true}

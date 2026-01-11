@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Query, BackgroundTasks, Response
+from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Query, BackgroundTasks, Response, Request
 from pydantic import BaseModel
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.middleware.cors import CORSMiddleware
@@ -420,7 +420,8 @@ app.add_middleware(
 )
 
 # Basic Auth
-security = HTTPBasic()
+# NOTE: auto_error=False is required so AUTH_MODE=public can work without triggering browser login prompts.
+security = HTTPBasic(auto_error=False)
 
 # Environment variables
 AUTH_MODE = os.getenv("AUTH_MODE", "basic")
@@ -482,19 +483,31 @@ def rate_limit(bucket: str, default_per_minute: int):
 
 
 def _role_for_username(username: str) -> str:
-    if username == BASIC_AUTH_ADMIN_USER:
+    # In basic auth mode, map usernames to roles.
+    if AUTH_MODE == "basic":
+        if username == BASIC_AUTH_ADMIN_USER:
+            return "admin"
+        if BASIC_AUTH_EDITOR_USER and username == BASIC_AUTH_EDITOR_USER:
+            return "editor"
+        # Default: om det bara finns en användare i demo så är den admin.
         return "admin"
-    if BASIC_AUTH_EDITOR_USER and username == BASIC_AUTH_EDITOR_USER:
-        return "editor"
-    # Default: om det bara finns en användare i demo så är den admin.
-    return "admin"
+    # In public/non-basic mode, no user should be treated as admin by default.
+    return "public"
 
 
-def verify_basic_auth(credentials: HTTPBasicCredentials = Depends(security)):
+def verify_basic_auth(credentials: Optional[HTTPBasicCredentials] = Depends(security)):
     """Verify Basic Auth credentials"""
     if AUTH_MODE != "basic":
-        # Non-basic auth is not implemented in this demo. Treat as internal/admin.
-        return "system"
+        # Public mode: do not challenge browser with Basic Auth.
+        # NOTE: admin-only endpoints must remain protected via require_admin().
+        return "public"
+
+    if credentials is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Missing authentication credentials",
+            headers={"WWW-Authenticate": "Basic"},
+        )
     
     is_admin = (
         credentials.username == BASIC_AUTH_ADMIN_USER
@@ -516,10 +529,23 @@ def verify_basic_auth(credentials: HTTPBasicCredentials = Depends(security)):
     return credentials.username
 
 
-def require_admin(username: str = Depends(verify_basic_auth)):
-    """Policy gate: endast admin får utföra destruktiva åtgärder."""
-    if _role_for_username(username) != "admin":
-        raise HTTPException(status_code=403, detail="Admin privileges required")
+def require_admin(request: Request, username: str = Depends(verify_basic_auth)):
+    """
+    Policy gate: endast admin får utföra destruktiva åtgärder.
+
+    - AUTH_MODE=basic: Basic Auth admin/editor som tidigare.
+    - AUTH_MODE!=basic (public demo): kräver ADMIN_TOKEN via header `X-Admin-Token`.
+      Om ADMIN_TOKEN inte är satt, blockas admin-endpoints helt (fail-closed).
+    """
+    if AUTH_MODE == "basic":
+        if _role_for_username(username) != "admin":
+            raise HTTPException(status_code=403, detail="Admin privileges required")
+        return True
+
+    required = os.getenv("ADMIN_TOKEN", "").strip()
+    provided = (request.headers.get("X-Admin-Token", "") or "").strip()
+    if not required or provided != required:
+        raise HTTPException(status_code=403, detail="Admin token required")
     return True
 
 
