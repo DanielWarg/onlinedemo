@@ -686,6 +686,7 @@ function JournalistNotes({ projectId }) {
               className="btn-prefix"
               onClick={() => insertPrefix('❗')}
               title="Viktigt"
+              type="button"
             >
               <AlertCircle size={14} />
               <span>Viktigt</span>
@@ -694,6 +695,7 @@ function JournalistNotes({ projectId }) {
               className="btn-prefix"
               onClick={() => insertPrefix('❓')}
               title="Fråga"
+              type="button"
             >
               <HelpCircle size={14} />
               <span>Fråga</span>
@@ -702,6 +704,7 @@ function JournalistNotes({ projectId }) {
               className="btn-prefix"
               onClick={() => insertPrefix('⚠️')}
               title="Osäkert"
+              type="button"
             >
               <AlertTriangle size={14} />
               <span>Osäkert</span>
@@ -732,6 +735,7 @@ function JournalistNotes({ projectId }) {
                 imageInputRef.current?.click()
               }}
               title="Ladda upp bild"
+              type="button"
             >
               <ImageIcon size={14} />
               <span>Bild</span>

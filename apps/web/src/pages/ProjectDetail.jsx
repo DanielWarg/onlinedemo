@@ -1041,6 +1041,7 @@ function ProjectDetail() {
                       setMicPermissionError(null)
                     }}
                     disabled={isRecording || recordingUploading || recordingProcessing}
+                    type="button"
                   >
                     <Mic size={18} />
                     <span>Spela in</span>
@@ -1054,6 +1055,7 @@ function ProjectDetail() {
                       audioInputRef.current?.click()
                     }}
                     disabled={isRecording || recordingUploading || recordingProcessing}
+                    type="button"
                   >
                     <Upload size={18} />
                     <span>Ladda upp fil</span>

@@ -6,6 +6,7 @@ export function Button({
   size = 'md',
   className = '',
   disabled = false,
+  type = 'button',
   ...props 
 }) {
   const classes = `btn btn-${variant} btn-${size} ${className}`.trim()
@@ -14,6 +15,7 @@ export function Button({
     <button 
       className={classes}
       disabled={disabled}
+      type={type}
       {...props}
     >
       {children}
