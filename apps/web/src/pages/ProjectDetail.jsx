@@ -142,7 +142,8 @@ function ProjectDetail() {
 
   // NOTE: We intentionally avoid programmatic input.click() for file pickers.
   // Some browsers silently block it; instead we overlay the <input type="file">
-  // over the clickable UI with opacity:0 so the user gesture hits the input directly.
+  // over the clickable UI so the user gesture hits the input directly.
+  // NOTE: Use a tiny non-zero opacity for better Safari/iOS compatibility.
 
   const handleAudioSelect = async (e) => {
     const file = e.target.files?.[0]
@@ -1042,7 +1043,8 @@ function ProjectDetail() {
                       style={{
                         position: 'absolute',
                         inset: 0,
-                        opacity: 0,
+                        opacity: 0.01,
+                        zIndex: 2,
                         cursor: (isRecording || recordingUploading || recordingProcessing) ? 'default' : 'pointer'
                       }}
                     />
@@ -1217,7 +1219,8 @@ function ProjectDetail() {
                     style={{
                       position: 'absolute',
                       inset: 0,
-                      opacity: 0,
+                      opacity: 0.01,
+                      zIndex: 2,
                       cursor: uploading ? 'default' : 'pointer'
                     }}
                   />
