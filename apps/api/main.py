@@ -3599,6 +3599,12 @@ async def compile_fortknox_report(
     start_time = time.time()
     
     try:
+        # If env selects langchain pipeline, reuse the opt-in endpoint implementation.
+        # This makes the main Fort Knox button ("Kompilera Extern") work in OpenAI demo deploys,
+        # without requiring a local FortKnox server on host.docker.internal:8787.
+        if os.getenv("FORTKNOX_PIPELINE", "default").strip().lower() == "langchain":
+            return await compile_fortknox_report_langchain(request=request, db=db, username=username, _=True)
+
         # Hämta policy
         policy = get_policy(request.policy_id)
         
@@ -4435,6 +4441,17 @@ async def compile_fortknox_report_job(
     Skapa ett bakgrundsjobb för Fort Knox-rapport.
     Demo-safe: om ASYNC_JOBS inte är aktivt -> 409 så klient kan falla tillbaka till sync-endpoint.
     """
+    # If env selects langchain pipeline, reuse the langchain jobs variant so the UI doesn't
+    # rely on a local FortKnox server in OpenAI demo deploys.
+    if os.getenv("FORTKNOX_PIPELINE", "default").strip().lower() == "langchain":
+        return await compile_fortknox_report_langchain_job(
+            request=request,
+            background_tasks=background_tasks,
+            db=db,
+            username=username,
+            __rl=__rl,
+        )
+
     if not ASYNC_JOBS_ENABLED:
         raise HTTPException(status_code=409, detail="Async jobs disabled")
 
