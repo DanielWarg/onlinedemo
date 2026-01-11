@@ -2604,6 +2604,20 @@ async def list_scout_feeds(
     username: str = Depends(verify_basic_auth)
 ):
     """List all Scout feeds. Lazy seed: creates default feeds if table is empty."""
+    def _ensure_feed(name: str, url: str, *, enabled: bool = True) -> bool:
+        """Upsert-like helper: ensure feed exists by url. Returns True if created."""
+        existing = db.query(ScoutFeed).filter(ScoutFeed.url == url).first()
+        if existing:
+            # If someone disabled a default feed, keep it enabled for demo.
+            if enabled and not existing.is_enabled:
+                existing.is_enabled = True
+                db.commit()
+            return False
+        feed = ScoutFeed(name=name, url=url, is_enabled=enabled)
+        db.add(feed)
+        db.commit()
+        return True
+
     # Lazy seed: if no feeds exist, create defaults
     feed_count = db.query(ScoutFeed).count()
     if feed_count == 0:
@@ -2629,19 +2643,25 @@ async def list_scout_feeds(
         db.commit()
         logger.info("Scout: Created 3 default feeds (all enabled)")
     else:
-        # Kontrollera om Göteborgs tingsrätt feed saknas och lägg till den
-        domstol_feed = db.query(ScoutFeed).filter(
-            ScoutFeed.url == "https://www.domstol.se/feed/56/?searchPageId=1139&scope=news"
-        ).first()
-        if not domstol_feed:
-            new_feed = ScoutFeed(
-                name="Göteborgs tingsrätt",
-                url="https://www.domstol.se/feed/56/?searchPageId=1139&scope=news",
-                is_enabled=True
-            )
-            db.add(new_feed)
-            db.commit()
-            logger.info("Scout: Added Göteborgs tingsrätt feed to existing feeds")
+        # Ensure default demo feeds exist even if table is not empty
+        created_any = False
+        created_any |= _ensure_feed(
+            "Polisen – Händelser Västra Götaland",
+            "https://polisen.se/aktuellt/rss/vastra-gotaland/handelser-rss---vastra-gotaland/",
+            enabled=True,
+        )
+        created_any |= _ensure_feed(
+            "Polisen – Pressmeddelanden Västra Götaland",
+            "https://polisen.se/aktuellt/rss/vastra-gotaland/pressmeddelanden-rss---vastra-gotaland/",
+            enabled=True,
+        )
+        created_any |= _ensure_feed(
+            "Göteborgs tingsrätt",
+            "https://www.domstol.se/feed/56/?searchPageId=1139&scope=news",
+            enabled=True,
+        )
+        if created_any:
+            logger.info("Scout: Ensured default demo feeds exist (polisen + domstol)")
     
     feeds = db.query(ScoutFeed).all()
     return feeds
@@ -2766,6 +2786,17 @@ async def fetch_scout_feeds(
             db.add(feed)
         db.commit()
         logger.info("Scout: Created 3 default feeds (all enabled) [seeded in /fetch]")
+    else:
+        # Also ensure Polisen + Domstol feeds exist for demo even if table isn't empty
+        for name, url in [
+            ("Polisen – Händelser Västra Götaland", "https://polisen.se/aktuellt/rss/vastra-gotaland/handelser-rss---vastra-gotaland/"),
+            ("Polisen – Pressmeddelanden Västra Götaland", "https://polisen.se/aktuellt/rss/vastra-gotaland/pressmeddelanden-rss---vastra-gotaland/"),
+            ("Göteborgs tingsrätt", "https://www.domstol.se/feed/56/?searchPageId=1139&scope=news"),
+        ]:
+            existing = db.query(ScoutFeed).filter(ScoutFeed.url == url).first()
+            if not existing:
+                db.add(ScoutFeed(name=name, url=url, is_enabled=True))
+        db.commit()
     
     results = fetch_all_feeds(db)
     return {"feeds_processed": len(results), "results": results}
