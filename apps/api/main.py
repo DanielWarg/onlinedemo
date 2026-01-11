@@ -4397,7 +4397,6 @@ async def compile_fortknox_report_job(
     request: KnoxCompileRequest,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_admin),
     username: str = Depends(verify_basic_auth),
     __rl: bool = Depends(rate_limit("fortknox_compile", 6)),
 ):
@@ -4446,7 +4445,6 @@ async def compile_fortknox_report_langchain_job(
     request: KnoxCompileRequest,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_admin),
     username: str = Depends(verify_basic_auth),
     __rl: bool = Depends(rate_limit("fortknox_compile", 6)),
 ):

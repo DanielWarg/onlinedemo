@@ -116,6 +116,18 @@ function FortKnoxStation({ projectId, onClose, embedded = false }) {
     return { error_code: 'UNKNOWN', reasons: [JSON.stringify(payload)], detail: payload }
   }
 
+  const formatErrorDetail = (detail) => {
+    if (!detail) return ''
+    if (typeof detail === 'string') return detail
+    try {
+      const s = JSON.stringify(detail)
+      // Keep UI readable even if server returns large objects
+      return s.length > 500 ? `${s.slice(0, 500)}…` : s
+    } catch {
+      return String(detail)
+    }
+  }
+
   const getStatus = () => {
     if (loading) return 'WORKING'
     if (error) {
@@ -1241,7 +1253,8 @@ function FortKnoxStation({ projectId, onClose, embedded = false }) {
                   <p>
                     {error.error_code === 'EMPTY_INPUT_SET'
                       ? 'Du har exkluderat allt underlag. Välj minst ett dokument eller en anteckning.'
-                      : error.detail || 'Okänt fel'}
+                      : formatErrorDetail(error.detail) || 'Okänt fel'}
+                      : formatErrorDetail(error.detail) || 'Okänt fel'}
                   </p>
                 </div>
               )}

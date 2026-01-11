@@ -66,6 +66,17 @@ function FortKnoxPanel({ projectId }) {
     return { error_code: 'UNKNOWN', reasons: [JSON.stringify(payload)], detail: payload }
   }
 
+  const formatErrorDetail = (detail) => {
+    if (!detail) return ''
+    if (typeof detail === 'string') return detail
+    try {
+      const s = JSON.stringify(detail)
+      return s.length > 500 ? `${s.slice(0, 500)}…` : s
+    } catch {
+      return String(detail)
+    }
+  }
+
   const getStatus = () => {
     if (loading) return 'WORKING'
     if (error) {
@@ -1100,6 +1111,11 @@ function FortKnoxPanel({ projectId }) {
                     <li key={idx}>{reason}</li>
                   ))}
                 </ul>
+              )}
+              {error.detail && (
+                <div className="fortknox-error-detail">
+                  {formatErrorDetail(error.detail)}
+                </div>
               )}
             </>
           )}
