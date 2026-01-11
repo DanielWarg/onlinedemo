@@ -43,6 +43,18 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-arbetsytan}
       POSTGRES_USER: ${POSTGRES_USER:-arbetsytan}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-arbetsytan}
+      # Optional: OpenAI (STT/LLM) - used only if you enable the providers in deploy/tailscale/.env
+      STT_ENGINE: ${STT_ENGINE:-faster_whisper}
+      WHISPER_MODEL: ${WHISPER_MODEL:-small}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_STT_MODEL: ${OPENAI_STT_MODEL:-whisper-1}
+      OPENAI_STT_LANGUAGE: ${OPENAI_STT_LANGUAGE:-}
+      # Optional: LangChain pipeline (se ONEPAGER.md / deploy/tailscale/env.example)
+      FORTKNOX_PIPELINE: ${FORTKNOX_PIPELINE:-default}
+      FORTKNOX_LC_PROVIDER: ${FORTKNOX_LC_PROVIDER:-local}
+      FORTKNOX_LC_BASE_URL: ${FORTKNOX_LC_BASE_URL:-}
+      FORTKNOX_LC_API_KEY: ${FORTKNOX_LC_API_KEY:-local}
+      FORTKNOX_LC_MODEL: ${FORTKNOX_LC_MODEL:-}
     depends_on:
       - postgres
     volumes:
