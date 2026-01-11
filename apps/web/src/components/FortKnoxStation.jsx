@@ -1254,7 +1254,6 @@ function FortKnoxStation({ projectId, onClose, embedded = false }) {
                     {error.error_code === 'EMPTY_INPUT_SET'
                       ? 'Du har exkluderat allt underlag. Välj minst ett dokument eller en anteckning.'
                       : formatErrorDetail(error.detail) || 'Okänt fel'}
-                      : formatErrorDetail(error.detail) || 'Okänt fel'}
                   </p>
                 </div>
               )}
