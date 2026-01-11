@@ -50,6 +50,7 @@ function ProjectDetail() {
   const [exporting, setExporting] = useState(false)
   const [showFortKnoxStation, setShowFortKnoxStation] = useState(false)
   const fileInputRef = useRef(null)
+  const docFileInputId = `doc-upload-${id}`
   
   // Recording states
   const [recordingUploading, setRecordingUploading] = useState(false)
@@ -141,6 +142,8 @@ function ProjectDetail() {
   }, [projectNotes, location.state?.openNoteId])
 
   const handleDropzoneClick = () => {
+    // Keep for backwards compatibility in case label click is blocked by overlays;
+    // label-based opening is preferred because it's most robust across browsers.
     const input = ingestMode === 'audio' ? audioInputRef.current : fileInputRef.current
     if (!input) return
     try {
@@ -1213,13 +1216,24 @@ function ProjectDetail() {
             {/* Primary Document Upload - Only when document mode is active - MUST be before Material List */}
             {ingestMode === 'document' && (
               <div className="document-primary-upload">
-                <div 
+                <label
                   className={`ingest-dropzone ${uploading ? 'uploading' : ''}`}
-                  onClick={handleDropzoneClick}
+                  htmlFor={docFileInputId}
+                  style={{ cursor: uploading ? 'default' : 'pointer' }}
+                  onClick={(e) => {
+                    if (uploading) {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      return
+                    }
+                    // Keep old handler as fallback (some browsers block label activation in edge cases)
+                    handleDropzoneClick()
+                  }}
                 >
                   <input
                     ref={fileInputRef}
                     type="file"
+                    id={docFileInputId}
                     accept=".pdf,.txt"
                     onChange={handleFileSelect}
                     // Some browsers block programmatic click() on display:none inputs.
@@ -1245,7 +1259,7 @@ function ProjectDetail() {
                       </>
                     )}
                   </div>
-                </div>
+                </label>
                 <p className="document-upload-help">Ladda upp dokument för automatisk bearbetning och sanering.</p>
               </div>
             )}

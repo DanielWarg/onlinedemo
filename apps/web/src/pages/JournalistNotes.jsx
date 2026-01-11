@@ -37,6 +37,7 @@ function JournalistNotes({ projectId }) {
   
   const textareaRef = useRef(null)
   const imageInputRef = useRef(null)
+  const imageInputId = 'journalist-note-image-input'
   const saveTimeoutRef = useRef(null)
 
   const username = 'admin'
@@ -712,6 +713,7 @@ function JournalistNotes({ projectId }) {
             <input
               ref={imageInputRef}
               type="file"
+              id={imageInputId}
               accept="image/*"
               onChange={handleImageSelect}
               // Some browsers are picky about programmatic click() on display:none inputs.
@@ -724,22 +726,23 @@ function JournalistNotes({ projectId }) {
                 opacity: 0
               }}
             />
-            <button
+            <label
               className="btn-prefix"
+              htmlFor={imageInputId}
+              title="Ladda upp bild"
+              style={{ cursor: 'pointer' }}
               onClick={() => {
+                // optional: keep legacy fallback for some browsers
                 try {
                   imageInputRef.current?.showPicker?.()
                 } catch {
                   // ignore
                 }
-                imageInputRef.current?.click()
               }}
-              title="Ladda upp bild"
-              type="button"
             >
               <ImageIcon size={14} />
               <span>Bild</span>
-            </button>
+            </label>
           </div>
 
           <div className={`edit-modal-textarea-container ${pasteFeedback ? 'paste-feedback' : ''}`}>
