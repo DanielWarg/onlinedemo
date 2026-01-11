@@ -11,7 +11,7 @@ pypdf==3.17.0
 requests==2.31.0
 openai-whisper==20231117
 faster-whisper==1.0.3
-openai==1.55.3
+openai==2.15.0
 psutil==7.2.1
 tqdm==4.66.1
 feedparser==6.0.10
