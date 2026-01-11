@@ -716,29 +716,18 @@ function JournalistNotes({ projectId }) {
               id={imageInputId}
               accept="image/*"
               onChange={handleImageSelect}
-              // Some browsers are picky about programmatic click() on display:none inputs.
-              // Keep it visually hidden but present in the layout tree.
               style={{
                 position: 'absolute',
-                left: '-9999px',
-                width: '1px',
-                height: '1px',
-                opacity: 0
+                inset: 0,
+                opacity: 0,
+                cursor: 'pointer'
               }}
             />
             <label
               className="btn-prefix"
               htmlFor={imageInputId}
               title="Ladda upp bild"
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                // optional: keep legacy fallback for some browsers
-                try {
-                  imageInputRef.current?.showPicker?.()
-                } catch {
-                  // ignore
-                }
-              }}
+              style={{ cursor: 'pointer', position: 'relative' }}
             >
               <ImageIcon size={14} />
               <span>Bild</span>

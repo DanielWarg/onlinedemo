@@ -50,7 +50,6 @@ function ProjectDetail() {
   const [exporting, setExporting] = useState(false)
   const [showFortKnoxStation, setShowFortKnoxStation] = useState(false)
   const fileInputRef = useRef(null)
-  const docFileInputId = `doc-upload-${id}`
   
   // Recording states
   const [recordingUploading, setRecordingUploading] = useState(false)
@@ -141,18 +140,9 @@ function ProjectDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectNotes, location.state?.openNoteId])
 
-  const handleDropzoneClick = () => {
-    // Keep for backwards compatibility in case label click is blocked by overlays;
-    // label-based opening is preferred because it's most robust across browsers.
-    const input = ingestMode === 'audio' ? audioInputRef.current : fileInputRef.current
-    if (!input) return
-    try {
-      input.showPicker?.()
-    } catch {
-      // ignore
-    }
-    input.click()
-  }
+  // NOTE: We intentionally avoid programmatic input.click() for file pickers.
+  // Some browsers silently block it; instead we overlay the <input type="file">
+  // over the clickable UI with opacity:0 so the user gesture hits the input directly.
 
   const handleAudioSelect = async (e) => {
     const file = e.target.files?.[0]
@@ -1021,21 +1011,6 @@ function ProjectDetail() {
                   <p className="audio-recorder-help">Spela in direkt eller ladda upp en ljudfil för transkribering.</p>
                 </div>
 
-                {/* Keep file input ALWAYS mounted so we can open the picker within the same user gesture tick */}
-                <input
-                  ref={audioInputRef}
-                  type="file"
-                  accept="audio/*"
-                  onChange={handleAudioSelect}
-                  style={{
-                    position: 'absolute',
-                    left: '-9999px',
-                    width: '1px',
-                    height: '1px',
-                    opacity: 0
-                  }}
-                />
-
                 <div className="audio-recorder-actions">
                   <button
                     className={`audio-action-btn audio-action-primary ${recordingMode === 'record' ? 'active' : ''}`}
@@ -1049,20 +1024,31 @@ function ProjectDetail() {
                     <Mic size={18} />
                     <span>Spela in</span>
                   </button>
-                  <button
+                  <label
                     className={`audio-action-btn audio-action-secondary ${recordingMode === 'upload' ? 'active' : ''}`}
+                    style={{ position: 'relative', cursor: (isRecording || recordingUploading || recordingProcessing) ? 'default' : 'pointer' }}
                     onClick={() => {
+                      // Keep UX state in sync; the input overlay will open the picker.
                       setRecordingMode('upload')
                       setMicPermissionError(null)
-                      // IMPORTANT: Must be in the same user-gesture tick, otherwise browsers may block the picker.
-                      audioInputRef.current?.click()
                     }}
-                    disabled={isRecording || recordingUploading || recordingProcessing}
-                    type="button"
                   >
+                    <input
+                      ref={audioInputRef}
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleAudioSelect}
+                      disabled={isRecording || recordingUploading || recordingProcessing}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        opacity: 0,
+                        cursor: (isRecording || recordingUploading || recordingProcessing) ? 'default' : 'pointer'
+                      }}
+                    />
                     <Upload size={18} />
                     <span>Ladda upp fil</span>
-                  </button>
+                  </label>
                 </div>
 
                 <div className="audio-recorder-content">
@@ -1218,32 +1204,21 @@ function ProjectDetail() {
               <div className="document-primary-upload">
                 <label
                   className={`ingest-dropzone ${uploading ? 'uploading' : ''}`}
-                  htmlFor={docFileInputId}
-                  style={{ cursor: uploading ? 'default' : 'pointer' }}
-                  onClick={(e) => {
-                    if (uploading) {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      return
-                    }
-                    // Keep old handler as fallback (some browsers block label activation in edge cases)
-                    handleDropzoneClick()
-                  }}
+                  style={{ cursor: uploading ? 'default' : 'pointer', position: 'relative', display: 'block' }}
                 >
                   <input
                     ref={fileInputRef}
                     type="file"
-                    id={docFileInputId}
                     accept=".pdf,.txt"
                     onChange={handleFileSelect}
+                    disabled={uploading}
                     // Some browsers block programmatic click() on display:none inputs.
-                    // Keep it hidden but present in the layout tree.
+                    // We keep it OVERLAYED so the actual click hits the input (most compatible).
                     style={{
                       position: 'absolute',
-                      left: '-9999px',
-                      width: '1px',
-                      height: '1px',
-                      opacity: 0
+                      inset: 0,
+                      opacity: 0,
+                      cursor: uploading ? 'default' : 'pointer'
                     }}
                   />
                   <div className="dropzone-content">
