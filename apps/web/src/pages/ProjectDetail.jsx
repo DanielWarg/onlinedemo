@@ -1012,21 +1012,6 @@ function ProjectDetail() {
                   <p className="audio-recorder-help">Spela in direkt eller ladda upp en ljudfil för transkribering.</p>
                 </div>
 
-                {/* Keep file input ALWAYS mounted so we can open the picker within the same user gesture tick */}
-                <input
-                  ref={audioInputRef}
-                  type="file"
-                  accept="audio/*"
-                  onChange={handleAudioSelect}
-                  style={{
-                    position: 'absolute',
-                    left: '-9999px',
-                    width: '1px',
-                    height: '1px',
-                    opacity: 0
-                  }}
-                />
-
                 <div className="audio-recorder-actions">
                   <button
                     className={`audio-action-btn audio-action-primary ${recordingMode === 'record' ? 'active' : ''}`}
@@ -1059,6 +1044,7 @@ function ProjectDetail() {
                         position: 'absolute',
                         inset: 0,
                         opacity: 0.01,
+                        zIndex: 10,
                         cursor: (isRecording || recordingUploading || recordingProcessing) ? 'not-allowed' : 'pointer'
                       }}
                     />
@@ -1230,6 +1216,7 @@ function ProjectDetail() {
                       position: 'absolute',
                       inset: 0,
                       opacity: 0.01,
+                      zIndex: 10,
                       cursor: uploading ? 'not-allowed' : 'pointer'
                     }}
                   />

@@ -721,6 +721,7 @@ function JournalistNotes({ projectId }) {
                   position: 'absolute',
                   inset: 0,
                   opacity: 0.01,
+                  zIndex: 10,
                   cursor: 'pointer'
                 }}
               />
